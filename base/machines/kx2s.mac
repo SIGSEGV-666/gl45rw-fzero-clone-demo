@@ -1,0 +1,15 @@
+DisplayName "*Default machine data*"
+ModelPath "/models/testCar2.dmd"
+TopSpeed 990 1140
+Acceleration 600 350
+NormalGrip 0.995 0.9995
+SkidGrip 0.25 0.25
+Traction 2 2
+BrakePower 0.95 0.65
+
+EngineFireSpawner
+    LocalPosition -0.75 -2.25 0
+;
+EngineFireSpawner
+    LocalPosition 0.75 -2.25 0
+;

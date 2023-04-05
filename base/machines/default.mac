@@ -1,0 +1,8 @@
+DisplayName "*Default machine data*"
+ModelPath "/models/spaceship.dmd"
+TopSpeed 985 1017
+Acceleration 500 250
+NormalGrip 0.990 0.990
+SkidGrip 0.25 0.25
+Traction 2 2
+BrakePower 0.995 0.995

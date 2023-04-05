@@ -1,0 +1,16 @@
+spawn light
+    orn_eul "0 0 0"
+    type "hemi"
+;
+
+spawn mapmodel
+    path "/models/newtrack2.dmd"
+    force_nearest 1
+;
+
+spawn mapmodel
+    path "/models/toytimesky.dmd"
+    pos "-1300 -400 2500"
+    scale "5 5 5"
+    force_nearest 1
+;

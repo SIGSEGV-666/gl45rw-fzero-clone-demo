@@ -1,0 +1,12 @@
+DisplayName "*Default machine data*"
+ModelPath "/models/feisar2097.dmd"
+TopSpeed 985 1125
+Acceleration 500 250
+NormalGrip 0.990 0.990
+SkidGrip 0.25 0.25
+Traction 2 2
+BrakePower 0.95 0.45
+
+EngineFireSpawner
+    LocalPosition 0 -4 0.25
+;

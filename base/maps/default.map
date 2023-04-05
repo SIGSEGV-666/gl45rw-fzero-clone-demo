@@ -1,0 +1,10 @@
+spawn light
+    orn_eul "25 0 0"
+    type "hemi"
+;
+
+spawn mapmodel
+    path "/models/toytimesky.dmd"
+    force_nearest 0
+;
+

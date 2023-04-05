@@ -1,0 +1,28 @@
+
+bind left "_testleft"
+bind right "_testright"
+
+bind up "_testup"
+bind down "_testdown"
+
+bind gp0a0- "_testleft"
+bind gp0a0+ "_testright"
+
+bind gp0b0 "_testup"
+bind gp0b2 "_testdown"
+
+bind gp0b3 "_testboost"
+
+bind gp0a3- "_testzoomin"
+bind gp0a3+ "_testzoomout"
+
+bind gp0a1- "_pitchdown"
+bind gp0a1+ "_pitchup"
+
+bind w "_pitchdown"
+bind s "_pitchup"
+
+bind q "_testzoomin"
+bind z "_testzoomout"
+
+bind f "_testboost"

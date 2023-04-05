@@ -1,0 +1,21 @@
+spawn light
+    orn_eul "0 0 0"
+    type "hemi"
+    energy 10
+;
+
+spawn light
+    orn_eul "180 0 0"
+    type "hemi"
+    diffuse.color "1 1 0.125"
+    specular.color "1 1 0.125"
+    energy 20
+;
+
+spawn mapmodel
+    path "/models/firefield.dmd"
+    force_nearest 0
+    pos "0 15 -2"
+;
+
+bgm "/music/firefield.bgm"

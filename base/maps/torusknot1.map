@@ -1,0 +1,43 @@
+spawn light
+    orn_eul "0 0 0"
+    type "hemi"
+    energy 10
+;
+
+spawn light
+    orn_eul "-90 -208 0"
+    type "hemi"
+    energy 15
+    diffuse.color "1 0.75 0"
+    specular.color "1 0.75 0"
+;
+
+spawn mapmodel
+    path "/models/torusknottrack.dmd"
+    force_nearest 0
+    pos "921.6062 -117.89148 727.0036"
+;
+
+spawn mapmodel
+    path "/models/building1.dmd"
+    pos "240 0 -250"
+    scale "1 1 1"
+;
+
+spawn mapmodel
+    path "/models/building1.dmd"
+    pos "240 -240 -250"
+    scale "1 1 1"
+;
+
+spawn mapmodel
+    path "/models/building1.dmd"
+    pos "-240 0 -250"
+    scale "1 1 1"
+;
+
+spawn mapmodel
+    path "/models/building1.dmd"
+    pos "-300 -240 -250"
+    scale "1 1 1"
+;

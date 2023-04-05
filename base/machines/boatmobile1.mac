@@ -1,0 +1,16 @@
+DisplayName "*Default machine data*"
+ModelPath "/models/boatmobile1.dmd"
+TopSpeed 990 1105
+Acceleration 500 450
+NormalGrip 0.995 0.995
+SkidGrip 0.25 0.25
+Traction 2 2
+BrakePower 0.997 0.997
+
+EngineFireSpawner
+    LocalPosition 1.0351 -3.795 1.95882
+;
+
+EngineFireSpawner
+    LocalPosition -1.0351 -3.795 1.95882
+;
