@@ -1,0 +1,9 @@
+@echo OFF
+echo [INFO] building the joystick tester tool...
+g++ ./gl45rw_jstester.cpp -o ./jstester_sdl2.exe -g -mconsole -L./ -lm -lwinmm -lSDL2 -DGL45RW_WITH_OPENGL=gl2 -DGL45RW_WINDOW_PROVIDER=SDL2 -DGL45RW_NO_TOUCHSCREEN_CODE
+echo [INFO] building stb_vorbis...
+g++ ./gl45rw/stb_vorbis.c -c
+echo [INFO] building the main game....
+g++ ./stb_vorbis.o ./main.cpp -o ./main_sdl2.exe -g -O2 -mconsole -L./ -lm -lwinmm -lsoft_oal -DGL45RW_WITH_OPENAL -DGL45RW_WITH_STB_VORBIS -lSDL2 -DGL45RW_WITH_OPENGL=gl2 -DGL45RW_WITH_SW3D3 -DGL45RW_WINDOW_PROVIDER=SDL2 -DGL45RW_NO_TOUCHSCREEN_CODE
+echo Done!
+pause
