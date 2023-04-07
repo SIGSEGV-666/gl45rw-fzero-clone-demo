@@ -472,6 +472,8 @@ class SpaceShooterMain : public EngineInstance {
                 }
         };
 
+        fvec3_t world_gravity;
+
         class EC_playership : public EntityClass {
             using EntityClass::EntityClass;
             public:
@@ -655,7 +657,7 @@ class SpaceShooterMain : public EngineInstance {
                     auto* scene = self.scene;
                     fscalar_t nytilt = 0;
                     //fvec3_t gravity = {0,0,-125.0f};
-                    fvec3_t gravity = {0,0,-200.0f * (SPEED_SCALE / 0.2f)};
+                    fvec3_t gravity = ei->world_gravity;
                     Scene::trace1_result trackres;
                     if (!ud->on_track_state.current){
                         ud->xtilt += (90.0f * ud->in_pitch * mld.ticdelta);
@@ -946,6 +948,7 @@ class SpaceShooterMain : public EngineInstance {
             bool fullscreen = false;
             std::string mapname = "firefield";
             std::string machine = "/machines/boatmobile1.mac";
+            std::vector<std::string> mods = {};
         };
         //dictionary<char32_t, BitmapFont::charmap_entry> fzgx_speedo_charmap = {};
         BitmapFont* fzgx_speedo_font = nullptr;
@@ -967,6 +970,23 @@ class SpaceShooterMain : public EngineInstance {
 
         SoundBufferHandle* music_hnd = nullptr;
         uid_t music_hnd_idx = 0;
+
+        class ResetPlayerCCMD : public ConsoleCommand {
+            using ConsoleCommand::ConsoleCommand;
+            public:
+                virtual int invoke(const std::u32string& args, CCMDInvokationExtraData& edata) {
+                    auto* ei = (SpaceShooterMain*)(this->instance);
+                    auto* player = ei->main_scene->getent(ei->player_eid);
+                    if (player != nullptr){
+                        auto* pud = (EC_playership::userdata_t*)player->userdata;
+                        pud->wlinv = fvec3_t(0);
+                        player->trs = trs_t();
+                    }
+                    return 0;
+                }
+        };
+
+
         void stop_bgm() {
             if (this->music_hnd_idx){this->S_StopSound(this->music_hnd_idx);}
             //if (this->S_IsHandle(this->music_hnd_idx)){this->del_asset(this->music_hnd_idx);}
@@ -1085,20 +1105,18 @@ class SpaceShooterMain : public EngineInstance {
             };
         }
 
-        static int _map_on_extracmd(Scene::worldfile_extracmdargs_t& args) {
-            auto* ei = (SpaceShooterMain*)(args.scene->instance);
-            if (args.cmdname_u8 == "bgm") {
-                std::u32string fsp; djutil::ezstr::parse_strlit(fsp, *args.wfss_ptr);
-                ei->set_bgm(fsp);
-            }
-            return 0;
-        }
+
         virtual void _onCreate(void* params){
             auto p = (params != nullptr ? *(params_t*)params : params_t{});
 
             std::vector<std::u32string> srcs = {
                 ezstr::utf8_to_utf32(p.basedir)
             };
+
+            for (auto& m8 : p.mods) {
+                srcs.push_back(ezstr::utf8_to_utf32(m8));
+            }
+
             this->I_StartMainFS(srcs);
 
             this->default_bindcat = this->I_CreateBindCategory("_default", gl45rw::bindcmdnames_t{}, EngineInstance::bindcatflags(0U));
@@ -1119,6 +1137,8 @@ class SpaceShooterMain : public EngineInstance {
             for (auto _ivn : _ivar_names) {
                 this->new_ccmd<gl45rw::ConsoleIVAR>(_ivn);
             }
+
+            this->new_ccmd<ResetPlayerCCMD>(U"reset_player");
 
             this->C_ExecBatchFileFS(U"/game.rc");
 
@@ -1185,13 +1205,30 @@ class SpaceShooterMain : public EngineInstance {
 
 
 
+            this->setmap1(U"/maps/" + ezstr::utf8_to_utf32(p.mapname) + U".map", p.machine);
+        }
+
+        static int _map_on_extracmd(Scene::worldfile_extracmdargs_t& args) {
+            auto* ei = (SpaceShooterMain*)(args.scene->instance);
+            if (args.cmdname_u8 == "bgm") {
+                std::u32string fsp; djutil::ezstr::parse_strlit(fsp, *args.wfss_ptr);
+                ei->set_bgm(fsp);
+            }
+            else if (args.cmdname_u8 == "gravity"){
+                fvec3_t grav; args.wfss_ptr[0] >> grav.x >> grav.y >> grav.z;
+                ei->world_gravity = grav * (SPEED_SCALE / 0.2f);
+            }
+            return 0;
+        }
+        void setmap1(const std::u32string& mapname, const std::string& machine_name) {
+            this->world_gravity = fvec3_t{0,0,-200.0f * (SPEED_SCALE / 0.2f)};
+            this->main_scene->spawn_worldfile(mapname, 1, _map_on_extracmd);
             auto* player = this->main_scene->spawn("playership", Scene::dargs_t{
-                {"machine_data_name", p.machine}
+                {"machine_data_name", machine_name}
             });
             this->player_eid = player->eid;
-
-            this->main_scene->spawn_worldfile(U"/maps/" + ezstr::utf8_to_utf32(p.mapname) + U".map", 1, _map_on_extracmd);
         }
+
         virtual void _onWindowCloseEvent() {this->_mustclose = true;}
         float getinval(const std::string& iname) {
             if (int(this->console_data.state) != 0){return 0.0f;}
@@ -1277,7 +1314,7 @@ class SpaceShooterMain : public EngineInstance {
                     this->matrices.view.translate(fvec3_t{-1.0f * glm::clamp(plinv.x / (100.0f * (SPEED_SCALE / 0.2f)), -1.0f, 1.0f), -glm::clamp(plinv.z/(75.0f * (SPEED_SCALE / 0.2f)), -1.0f, 1.0f), this->camdist});
                     plspeed = glm::length(plinv);
                 }
-                this->matrices.projection.perspectiveX(cam_fov, this->R_WindowAspect(), 0.1f, 10000.0f);
+                this->matrices.projection.perspectiveX(cam_fov, this->R_WindowAspect(), 0.1f, 30000.0f);
 
                 this->main_scene->draw(mld.uptime);
 
@@ -1328,6 +1365,7 @@ int main(int argc, const char* argv[]) {
                 else if (parg.name == "basedir"){args.basedir = parg.value;}
                 else if (parg.name == "map"){args.mapname = parg.value;}
                 else if (parg.name == "machine"){args.machine = "/machines/" + parg.value + ".mac";}
+                else if (parg.name == "mod"){args.mods.push_back(parg.value);}
                 break;
             }
             case argprefix::double_dash: {
