@@ -23,6 +23,7 @@ Linux users (64-bit architectures only): you can either run `build_glfw.sh` to b
 
 `-renderscale=<integer-percentage-value>`: Runs the game at a specified percentage of the window's resolution, then upscales the result to the main window (`-renderscale=50` is useful for the software rasterizer to get more performance in software mode, defaults to `100`)
 
+`-mod=<path-to-mod-folder>`: Loads a specified mod folder.
 
 # Controls:
 
@@ -44,6 +45,7 @@ Linux users (64-bit architectures only): you can either run `build_glfw.sh` to b
 
 -Z/Gamepad right-stick backward: Move the camera backwards relative to the car
 
+-R/Gamepad "B" button: Reset the player's car back to spawn
 
 
 
