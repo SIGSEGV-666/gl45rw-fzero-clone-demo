@@ -26,3 +26,5 @@ bind q "_testzoomin"
 bind z "_testzoomout"
 
 bind f "_testboost"
+bind r "reset_player"
+bind gp0b1 "reset_player"
